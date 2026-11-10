@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Search, Settings, Sparkles, Smartphone } from 'lucide-react';
+import { BookOpen, Search, Settings, Sparkles, Smartphone, Heart } from 'lucide-react';
 import type { BookMeta } from '../types';
 
 interface HeaderProps {
@@ -10,6 +10,7 @@ interface HeaderProps {
   onOpenSettings: () => void;
   onOpenInstallGuide: () => void;
   onOpenDailyDevotional: () => void;
+  onOpenDonation: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -20,6 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSettings,
   onOpenInstallGuide,
   onOpenDailyDevotional,
+  onOpenDonation,
 }) => {
   return (
     <header className="app-header">
@@ -61,6 +63,16 @@ export const Header: React.FC<HeaderProps> = ({
           id="btn-open-search"
         >
           <Search size={19} />
+        </button>
+
+        <button
+          className="icon-button"
+          onClick={onOpenDonation}
+          title="Apoiar com Doação (PIX)"
+          id="btn-open-donation"
+          style={{ color: '#ef4444' }}
+        >
+          <Heart size={19} fill="#ef4444" fillOpacity={0.2} />
         </button>
 
         <button

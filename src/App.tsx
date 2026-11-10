@@ -10,6 +10,7 @@ import { CardGeneratorModal } from './components/CardGeneratorModal';
 import { IosInstallGuideModal } from './components/IosInstallGuideModal';
 import { DailyDevotionalModal } from './components/DailyDevotionalModal';
 import { BookmarksModal } from './components/BookmarksModal';
+import { DonationModal } from './components/DonationModal';
 import { BottomNav } from './components/BottomNav';
 import { explainPassage } from './utils/explainer';
 
@@ -65,6 +66,7 @@ export function App() {
   const [isInstallGuideOpen, setIsInstallGuideOpen] = useState(false);
   const [isDevotionalOpen, setIsDevotionalOpen] = useState(false);
   const [isBookmarksOpen, setIsBookmarksOpen] = useState(false);
+  const [isDonationOpen, setIsDonationOpen] = useState(false);
 
   // Explanation Drawer
   const [isExplanationOpen, setIsExplanationOpen] = useState(false);
@@ -190,7 +192,6 @@ export function App() {
     const chapters = bookDetail.chapters[currentChapter - 1] || [];
 
     setHighlights((prev) => {
-      // Remove existing for this book, chapter and verseNumbers
       const filtered = prev.filter(
         (h) =>
           !(
@@ -202,7 +203,6 @@ export function App() {
 
       if (!color) return filtered;
 
-      // Add new highlights
       const newItems: Highlight[] = verseNumbers.map((num) => ({
         id: `${currentBook.abbrev}-${currentChapter}-${num}-${Date.now()}`,
         bookAbbrev: currentBook.abbrev,
@@ -285,6 +285,7 @@ export function App() {
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenInstallGuide={() => setIsInstallGuideOpen(true)}
         onOpenDailyDevotional={() => setIsDevotionalOpen(true)}
+        onOpenDonation={() => setIsDonationOpen(true)}
       />
 
       {/* Bible Reader */}
@@ -351,6 +352,13 @@ export function App() {
         settings={settings}
         onUpdateSettings={(newVals) => setSettings((prev) => ({ ...prev, ...newVals }))}
         onOpenInstallGuide={() => setIsInstallGuideOpen(true)}
+        onOpenDonation={() => setIsDonationOpen(true)}
+      />
+
+      {/* Donation Modal */}
+      <DonationModal
+        isOpen={isDonationOpen}
+        onClose={() => setIsDonationOpen(false)}
       />
 
       {/* Card Generator Modal */}

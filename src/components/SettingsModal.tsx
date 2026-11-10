@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Sliders } from 'lucide-react';
+import { X, Sliders, Heart } from 'lucide-react';
 import type { ReadingSettings, ThemeMode } from '../types';
 
 interface SettingsModalProps {
@@ -8,6 +8,7 @@ interface SettingsModalProps {
   settings: ReadingSettings;
   onUpdateSettings: (newSettings: Partial<ReadingSettings>) => void;
   onOpenInstallGuide: () => void;
+  onOpenDonation: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -16,6 +17,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   settings,
   onUpdateSettings,
   onOpenInstallGuide,
+  onOpenDonation,
 }) => {
   if (!isOpen) return null;
 
@@ -206,6 +208,47 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
 
+          {/* Donation Callout in Settings */}
+          <div
+            style={{
+              padding: '14px',
+              backgroundColor: 'var(--accent-gold-light)',
+              border: '1px solid var(--accent-gold)',
+              borderRadius: 'var(--radius-md)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--accent-gold)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Heart size={16} fill="#ef4444" color="#ef4444" />
+                <span>Apoie este Aplicativo</span>
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-primary)', marginTop: '2px' }}>
+                Ajude a manter os servidores ativos via PIX
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                onClose();
+                onOpenDonation();
+              }}
+              style={{
+                backgroundColor: 'var(--accent-gold)',
+                color: '#ffffff',
+                border: 'none',
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              Fazer Doação
+            </button>
+          </div>
+
           {/* Install PWA Guide Banner */}
           <div
             style={{
@@ -232,9 +275,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 onOpenInstallGuide();
               }}
               style={{
-                backgroundColor: 'var(--accent-gold)',
-                color: '#ffffff',
-                border: 'none',
+                backgroundColor: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-primary)',
                 padding: '6px 14px',
                 borderRadius: 'var(--radius-full)',
                 fontSize: '0.82rem',
