@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Bookmark, Highlighter, Trash2, ArrowRight } from 'lucide-react';
+import { X, Bookmark, Highlighter, Trash2, ArrowRight, Download } from 'lucide-react';
 import type { Highlight, PersonalNote, BookMeta } from '../types';
 
 interface BookmarksModalProps {
@@ -26,6 +26,35 @@ export const BookmarksModal: React.FC<BookmarksModalProps> = ({
 
   if (!isOpen) return null;
 
+  const handleExportBackup = () => {
+    let content = `BÍBLIA SAGRADA - MINHAS ANOTAÇÕES E VERSÍCULOS MARCADOS\n`;
+    content += `Data do Backup: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}\n`;
+    content += `========================================================\n\n`;
+
+    content += `--- VERSÍCULOS MARCADOS (${highlights.length}) ---\n\n`;
+    highlights.forEach((hl, i) => {
+      content += `${i + 1}. ${hl.bookName} ${hl.chapter}:${hl.verseNumber}\n`;
+      content += `"${hl.text}"\n`;
+      content += `Cor: ${hl.color} | Salvo em: ${new Date(hl.timestamp).toLocaleDateString('pt-BR')}\n\n`;
+    });
+
+    content += `\n--- MINHAS ANOTAÇÕES DE ESTUDO (${notes.length}) ---\n\n`;
+    notes.forEach((nt, i) => {
+      content += `${i + 1}. Referência: ${nt.bookName} Capítulo ${nt.chapter}\n`;
+      content += `Data: ${new Date(nt.timestamp).toLocaleDateString('pt-BR')}\n`;
+      content += `Anotação:\n${nt.note}\n\n`;
+      content += `--------------------------------------------------------\n`;
+    });
+
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `biblia-sagrada-backup-${new Date().toISOString().slice(0, 10)}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div
@@ -38,9 +67,20 @@ export const BookmarksModal: React.FC<BookmarksModalProps> = ({
             <Bookmark size={18} color="var(--accent-gold)" />
             <h2 className="modal-title">Marcadores & Notas</h2>
           </div>
-          <button className="icon-button" onClick={onClose}>
-            <X size={20} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {(highlights.length > 0 || notes.length > 0) && (
+              <button
+                className="icon-button"
+                onClick={handleExportBackup}
+                title="Exportar backup em arquivo texto"
+              >
+                <Download size={18} />
+              </button>
+            )}
+            <button className="icon-button" onClick={onClose}>
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         <div className="modal-body">

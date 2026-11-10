@@ -11,8 +11,11 @@ import { IosInstallGuideModal } from './components/IosInstallGuideModal';
 import { DailyDevotionalModal } from './components/DailyDevotionalModal';
 import { BookmarksModal } from './components/BookmarksModal';
 import { DonationModal } from './components/DonationModal';
-import { BottomNav } from './components/BottomNav';
+import { EmotionalPsalmsModal } from './components/EmotionalPsalmsModal';
+import { ReadingPlansModal } from './components/ReadingPlansModal';
+import { BottomNav, type NavTabType } from './components/BottomNav';
 import { explainPassage } from './utils/explainer';
+import { Minimize2 } from 'lucide-react';
 
 const STORAGE_KEY_SETTINGS = 'biblia_settings_v1';
 const STORAGE_KEY_LAST_READ = 'biblia_last_read_v1';
@@ -25,6 +28,7 @@ export function App() {
   const [currentChapter, setCurrentChapter] = useState<number>(23); // Default Salmo 23!
   const [bookDetail, setBookDetail] = useState<BookDetail | null>(null);
   const [isLoadingBook, setIsLoadingBook] = useState<boolean>(true);
+  const [isFocusMode, setIsFocusMode] = useState<boolean>(false);
 
   // Settings
   const [settings, setSettings] = useState<ReadingSettings>(() => {
@@ -67,6 +71,8 @@ export function App() {
   const [isDevotionalOpen, setIsDevotionalOpen] = useState(false);
   const [isBookmarksOpen, setIsBookmarksOpen] = useState(false);
   const [isDonationOpen, setIsDonationOpen] = useState(false);
+  const [isEmotionalPsalmsOpen, setIsEmotionalPsalmsOpen] = useState(false);
+  const [isReadingPlansOpen, setIsReadingPlansOpen] = useState(false);
 
   // Explanation Drawer
   const [isExplanationOpen, setIsExplanationOpen] = useState(false);
@@ -78,7 +84,7 @@ export function App() {
   const [cardRefLabel, setCardRefLabel] = useState('');
 
   // Active Bottom Tab
-  const [activeTab, setActiveTab] = useState<'reading' | 'salmos' | 'search' | 'bookmarks' | 'settings'>('reading');
+  const [activeTab, setActiveTab] = useState<NavTabType>('reading');
 
   // Apply theme to body
   useEffect(() => {
@@ -253,15 +259,29 @@ export function App() {
     setNotes((prev) => [newNote, ...prev.filter((n) => n.id !== newNote.id)]);
   };
 
+  // Open Psalm from Emotional directory
+  const handleSelectPsalm = (psalmNumber: number) => {
+    const salmosBook = books.find((b) => b.abbrev === 'sl') || currentBook;
+    if (salmosBook) {
+      handleSelectBookChapter(salmosBook, psalmNumber);
+    }
+  };
+
+  // Open passage from Reading Plans
+  const handleOpenPlanPassage = (bookAbbrev: string, chapter: number) => {
+    const book = books.find((b) => b.abbrev === bookAbbrev);
+    if (book) {
+      handleSelectBookChapter(book, chapter);
+    }
+  };
+
   // Bottom Nav switcher
-  const handleBottomTabSelect = (tab: 'reading' | 'salmos' | 'search' | 'bookmarks' | 'settings') => {
+  const handleBottomTabSelect = (tab: NavTabType) => {
     setActiveTab(tab);
     if (tab === 'salmos') {
-      const salmos = books.find((b) => b.abbrev === 'sl');
-      if (salmos) {
-        setBookSelectorFilter('salmos');
-        setIsBookSelectorOpen(true);
-      }
+      setIsEmotionalPsalmsOpen(true);
+    } else if (tab === 'plans') {
+      setIsReadingPlansOpen(true);
     } else if (tab === 'search') {
       setIsSearchOpen(true);
     } else if (tab === 'bookmarks') {
@@ -271,22 +291,29 @@ export function App() {
     }
   };
 
+  const salmosBook = books.find((b) => b.abbrev === 'sl') || null;
+
   return (
-    <div className="app-container">
+    <div className={`app-container ${isFocusMode ? 'focus-mode' : ''}`}>
       {/* Top Header */}
-      <Header
-        currentBook={currentBook}
-        currentChapter={currentChapter}
-        onOpenBookSelector={() => {
-          setBookSelectorFilter('all');
-          setIsBookSelectorOpen(true);
-        }}
-        onOpenSearch={() => setIsSearchOpen(true)}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        onOpenInstallGuide={() => setIsInstallGuideOpen(true)}
-        onOpenDailyDevotional={() => setIsDevotionalOpen(true)}
-        onOpenDonation={() => setIsDonationOpen(true)}
-      />
+      {!isFocusMode && (
+        <Header
+          currentBook={currentBook}
+          currentChapter={currentChapter}
+          onOpenBookSelector={() => {
+            setBookSelectorFilter('all');
+            setIsBookSelectorOpen(true);
+          }}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          onOpenInstallGuide={() => setIsInstallGuideOpen(true)}
+          onOpenDailyDevotional={() => setIsDevotionalOpen(true)}
+          onOpenDonation={() => setIsDonationOpen(true)}
+          onOpenReadingPlans={() => setIsReadingPlansOpen(true)}
+          isFocusMode={isFocusMode}
+          onToggleFocusMode={() => setIsFocusMode(!isFocusMode)}
+        />
+      )}
 
       {/* Bible Reader */}
       <BibleReader
@@ -304,8 +331,24 @@ export function App() {
         isLoading={isLoadingBook}
       />
 
+      {/* Floating Exit Button in Focus Mode */}
+      {isFocusMode && (
+        <button
+          className="exit-focus-btn"
+          onClick={() => setIsFocusMode(false)}
+          title="Sair do Modo Foco"
+        >
+          <Minimize2 size={16} />
+          <span>Sair do Modo Foco</span>
+        </button>
+      )}
+
       {/* Bottom Navigation (iOS Style) */}
-      <BottomNav activeTab={activeTab} onSelectTab={handleBottomTabSelect} />
+      <BottomNav
+        activeTab={activeTab}
+        onSelectTab={handleBottomTabSelect}
+        isFocusMode={isFocusMode}
+      />
 
       {/* Book & Chapter Selector Modal */}
       <BookSelectorModal
@@ -319,6 +362,28 @@ export function App() {
         currentChapter={currentChapter}
         onSelect={handleSelectBookChapter}
         defaultFilter={bookSelectorFilter}
+      />
+
+      {/* Emotional Psalms Directory Modal */}
+      <EmotionalPsalmsModal
+        isOpen={isEmotionalPsalmsOpen}
+        onClose={() => {
+          setIsEmotionalPsalmsOpen(false);
+          setActiveTab('reading');
+        }}
+        onSelectPsalm={handleSelectPsalm}
+        salmosBook={salmosBook}
+      />
+
+      {/* Reading Plans & O.R.A.R. Guide Modal */}
+      <ReadingPlansModal
+        isOpen={isReadingPlansOpen}
+        onClose={() => {
+          setIsReadingPlansOpen(false);
+          setActiveTab('reading');
+        }}
+        books={books}
+        onOpenDayPassage={handleOpenPlanPassage}
       />
 
       {/* Explanation Drawer / Sheet */}
@@ -353,6 +418,7 @@ export function App() {
         onUpdateSettings={(newVals) => setSettings((prev) => ({ ...prev, ...newVals }))}
         onOpenInstallGuide={() => setIsInstallGuideOpen(true)}
         onOpenDonation={() => setIsDonationOpen(true)}
+        onOpenReadingPlans={() => setIsReadingPlansOpen(true)}
       />
 
       {/* Donation Modal */}

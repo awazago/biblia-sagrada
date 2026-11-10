@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Sliders, Heart } from 'lucide-react';
+import { X, Sliders, Heart, Calendar } from 'lucide-react';
 import type { ReadingSettings, ThemeMode } from '../types';
 
 interface SettingsModalProps {
@@ -9,6 +9,7 @@ interface SettingsModalProps {
   onUpdateSettings: (newSettings: Partial<ReadingSettings>) => void;
   onOpenInstallGuide: () => void;
   onOpenDonation: () => void;
+  onOpenReadingPlans: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -18,6 +19,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onUpdateSettings,
   onOpenInstallGuide,
   onOpenDonation,
+  onOpenReadingPlans,
 }) => {
   if (!isOpen) return null;
 
@@ -206,6 +208,47 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 );
               })}
             </div>
+          </div>
+
+          {/* Reading Plans Banner in Settings */}
+          <div
+            style={{
+              padding: '14px',
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: 'var(--radius-md)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Calendar size={16} color="var(--accent-gold)" />
+                <span>Planos de Leitura Bíblica</span>
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                Guia didático O.R.A.R. e metas diárias
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                onClose();
+                onOpenReadingPlans();
+              }}
+              style={{
+                backgroundColor: 'var(--bg-primary)',
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-primary)',
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              Ver Planos
+            </button>
           </div>
 
           {/* Donation Callout in Settings */}

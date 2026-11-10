@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Search, Settings, Sparkles, Smartphone, Heart } from 'lucide-react';
+import { BookOpen, Search, Settings, Sparkles, Smartphone, Heart, Calendar, Maximize2, Minimize2 } from 'lucide-react';
 import type { BookMeta } from '../types';
 
 interface HeaderProps {
@@ -11,6 +11,9 @@ interface HeaderProps {
   onOpenInstallGuide: () => void;
   onOpenDailyDevotional: () => void;
   onOpenDonation: () => void;
+  onOpenReadingPlans: () => void;
+  isFocusMode: boolean;
+  onToggleFocusMode: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -22,9 +25,12 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenInstallGuide,
   onOpenDailyDevotional,
   onOpenDonation,
+  onOpenReadingPlans,
+  isFocusMode,
+  onToggleFocusMode,
 }) => {
   return (
-    <header className="app-header">
+    <header className={`app-header ${isFocusMode ? 'focus-mode-header' : ''}`}>
       {/* Brand & Book/Chapter selector */}
       <div className="brand-badge" onClick={onOpenBookSelector}>
         <img
@@ -47,15 +53,27 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Header Actions */}
       <div className="header-actions">
+        {/* Reading Plans Button */}
+        <button
+          className="icon-button"
+          onClick={onOpenReadingPlans}
+          title="Planos de Leitura & Guia Como Ler a Bíblia"
+          id="btn-reading-plans"
+        >
+          <Calendar size={19} color="var(--accent-gold)" />
+        </button>
+
+        {/* Daily Devotional */}
         <button
           className="icon-button"
           onClick={onOpenDailyDevotional}
           title="Versículo e Reflexão do Dia"
           id="btn-daily-devotional"
         >
-          <Sparkles size={19} color="var(--accent-gold)" />
+          <Sparkles size={19} />
         </button>
 
+        {/* Search */}
         <button
           className="icon-button"
           onClick={onOpenSearch}
@@ -65,6 +83,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Search size={19} />
         </button>
 
+        {/* Donation PIX */}
         <button
           className="icon-button"
           onClick={onOpenDonation}
@@ -75,6 +94,17 @@ export const Header: React.FC<HeaderProps> = ({
           <Heart size={19} fill="#ef4444" fillOpacity={0.2} />
         </button>
 
+        {/* Focus Mode Toggle */}
+        <button
+          className="icon-button"
+          onClick={onToggleFocusMode}
+          title={isFocusMode ? 'Sair do Modo Foco' : 'Modo Foco em Tela Cheia'}
+          id="btn-toggle-focus"
+        >
+          {isFocusMode ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+        </button>
+
+        {/* Install PWA */}
         <button
           className="icon-button"
           onClick={onOpenInstallGuide}
@@ -84,6 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Smartphone size={19} />
         </button>
 
+        {/* Settings */}
         <button
           className="icon-button"
           onClick={onOpenSettings}
