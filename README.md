@@ -141,3 +141,28 @@ npm run build
 ├── netlify.toml                     # Configuração para deploy no Netlify
 └── package.json
 ```
+
+---
+
+## 🕊️ Diretório Emocional dos Salmos ("Salmos para sua Alma")
+Acesse os 150 Salmos categorizados pelo que o coração está sentindo:
+* 😰 **Ansiedade, Pânico & Insônia**: Salmo 23, Salmo 46, Salmo 94, Salmo 4.
+* 🌧️ **Aflição, Dor & Luto**: Salmo 34, Salmo 40, Salmo 42, Salmo 147.
+* 🛡️ **Medo, Insegurança & Proteção**: Salmo 91, Salmo 121, Salmo 27, Salmo 3.
+* 💔 **Culpa, Arrependimento & Perdão**: Salmo 51, Salmo 32, Salmo 130.
+* 🧭 **Incerteza & Tomada de Decisão**: Salmo 1, Salmo 25, Salmo 119, Salmo 37.
+* 🙌 **Gratidão, Louvor & Vitória**: Salmo 100, Salmo 103, Salmo 150.
+
+---
+
+## 📅 Planos de Leitura & Guia Didático O.R.A.R.
+Aprenda como ler a Bíblia corretamente com o método devocional:
+1. **O - Observação**: O que o texto diz textualmente?
+2. **R - Reflexão**: O que isso revela sobre Deus?
+3. **A - Aplicação**: Como praticar isso na minha vida hoje?
+4. **R - Resposta em Oração**: Fale com Deus transformando a Palavra em oração.
+
+**Planos inclusos com progresso diário salvo:**
+* 🌱 *Iniciantes: Primeiros Passos* (30 Dias)
+* 🕊️ *Restaurando a Paz Interior* (21 Dias)
+* 🏛️ *Grandes Histórias e Heróis da Fé* (40 Dias)
