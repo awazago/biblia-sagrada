@@ -10,8 +10,10 @@ import {
   Bookmark,
   X,
   Check,
+  MessageCircle,
 } from 'lucide-react';
 import type { BookMeta, BookDetail, Highlight, ReadingSettings } from '../types';
+import { shareVerseOnWhatsApp } from '../utils/whatsapp';
 
 interface BibleReaderProps {
   book: BookMeta | null;
@@ -99,6 +101,17 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       setCopiedNotification(true);
       setTimeout(() => setCopiedNotification(false), 2000);
     });
+  };
+
+  const handleWhatsAppShare = () => {
+    const selected = getSelectedVersesData();
+    if (selected.length === 0) return;
+
+    const range =
+      selected.length === 1
+        ? `${chapter}:${selected[0].number}`
+        : `${chapter}:${selected[0].number}-${selected[selected.length - 1].number}`;
+    shareVerseOnWhatsApp(`${book.name} ${range}`, selected.map((v) => v.text).join(' '));
   };
 
   const handleSpeech = () => {
@@ -254,7 +267,18 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             id="btn-explain-passage"
           >
             <Sparkles size={16} />
-            <span>Explicar Trecho</span>
+            <span>Explicar</span>
+          </button>
+
+          {/* WhatsApp 1-Click Share */}
+          <button
+            className="toolbar-btn"
+            onClick={handleWhatsAppShare}
+            title="Enviar no WhatsApp"
+            style={{ color: '#25D366' }}
+          >
+            <MessageCircle size={15} />
+            <span>WhatsApp</span>
           </button>
 
           {/* Color Highlight */}

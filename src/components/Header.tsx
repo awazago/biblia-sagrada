@@ -1,10 +1,11 @@
 import React from 'react';
-import { BookOpen, Search, Settings, Sparkles, Smartphone, Heart, Calendar, Maximize2, Minimize2 } from 'lucide-react';
+import { BookOpen, Search, Settings, Sparkles, Smartphone, Heart, Calendar, Maximize2, Minimize2, Moon, Flame } from 'lucide-react';
 import type { BookMeta } from '../types';
 
 interface HeaderProps {
   currentBook: BookMeta | null;
   currentChapter: number;
+  currentStreak: number;
   onOpenBookSelector: () => void;
   onOpenSearch: () => void;
   onOpenSettings: () => void;
@@ -12,6 +13,8 @@ interface HeaderProps {
   onOpenDailyDevotional: () => void;
   onOpenDonation: () => void;
   onOpenReadingPlans: () => void;
+  onOpenSleepAudio: () => void;
+  onOpenStreakInfo: () => void;
   isFocusMode: boolean;
   onToggleFocusMode: () => void;
 }
@@ -19,6 +22,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   currentBook,
   currentChapter,
+  currentStreak,
   onOpenBookSelector,
   onOpenSearch,
   onOpenSettings,
@@ -26,6 +30,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenDailyDevotional,
   onOpenDonation,
   onOpenReadingPlans,
+  onOpenSleepAudio,
+  onOpenStreakInfo,
   isFocusMode,
   onToggleFocusMode,
 }) => {
@@ -53,6 +59,30 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Header Actions */}
       <div className="header-actions">
+        {/* Streak Habit Tracker Badge */}
+        <button
+          className="streak-badge-btn"
+          onClick={onOpenStreakInfo}
+          title={`Constância: ${currentStreak} dia(s) consecutivo(s) na Palavra de Deus. Clique para ver seus marcos!`}
+          id="btn-streak-badge"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            background: 'rgba(234, 179, 8, 0.12)',
+            border: '1px solid rgba(234, 179, 8, 0.35)',
+            borderRadius: '16px',
+            padding: '4px 9px',
+            fontSize: '0.78rem',
+            fontWeight: 700,
+            color: 'var(--accent-gold)',
+            cursor: 'pointer',
+          }}
+        >
+          <Flame size={14} color="#f59e0b" fill="#f59e0b" />
+          <span>{currentStreak}d</span>
+        </button>
+
         {/* Reading Plans Button */}
         <button
           className="icon-button"
@@ -61,6 +91,16 @@ export const Header: React.FC<HeaderProps> = ({
           id="btn-reading-plans"
         >
           <Calendar size={19} color="var(--accent-gold)" />
+        </button>
+
+        {/* Sleep Audio Button */}
+        <button
+          className="icon-button"
+          onClick={onOpenSleepAudio}
+          title="Áudio para Dormir em Paz (Salmos Narrados)"
+          id="btn-sleep-audio"
+        >
+          <Moon size={19} color="var(--accent-gold)" />
         </button>
 
         {/* Daily Devotional */}

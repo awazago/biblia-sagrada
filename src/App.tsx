@@ -13,8 +13,11 @@ import { BookmarksModal } from './components/BookmarksModal';
 import { DonationModal } from './components/DonationModal';
 import { EmotionalPsalmsModal } from './components/EmotionalPsalmsModal';
 import { ReadingPlansModal } from './components/ReadingPlansModal';
+import { SleepAudioModal } from './components/SleepAudioModal';
+import { MilestoneCelebrationModal } from './components/MilestoneCelebrationModal';
 import { BottomNav, type NavTabType } from './components/BottomNav';
 import { explainPassage } from './utils/explainer';
+import { loadStreakData, recordDailyReading, type StreakData } from './utils/streak';
 import { Minimize2 } from 'lucide-react';
 
 const STORAGE_KEY_SETTINGS = 'biblia_settings_v1';
@@ -73,6 +76,18 @@ export function App() {
   const [isDonationOpen, setIsDonationOpen] = useState(false);
   const [isEmotionalPsalmsOpen, setIsEmotionalPsalmsOpen] = useState(false);
   const [isReadingPlansOpen, setIsReadingPlansOpen] = useState(false);
+  const [isSleepAudioOpen, setIsSleepAudioOpen] = useState(false);
+  const [celebrationMilestone, setCelebrationMilestone] = useState<number | null>(null);
+  const [streakData, setStreakData] = useState<StreakData>(() => loadStreakData());
+
+  // Record daily devotional streak on mount and chapter reading
+  useEffect(() => {
+    const res = recordDailyReading();
+    setStreakData(res.data);
+    if (res.newMilestoneReached) {
+      setCelebrationMilestone(res.newMilestoneReached);
+    }
+  }, [currentChapter, currentBook]);
 
   // Explanation Drawer
   const [isExplanationOpen, setIsExplanationOpen] = useState(false);
@@ -310,6 +325,9 @@ export function App() {
           onOpenDailyDevotional={() => setIsDevotionalOpen(true)}
           onOpenDonation={() => setIsDonationOpen(true)}
           onOpenReadingPlans={() => setIsReadingPlansOpen(true)}
+          currentStreak={streakData.currentStreak}
+          onOpenSleepAudio={() => setIsSleepAudioOpen(true)}
+          onOpenStreakInfo={() => setCelebrationMilestone(streakData.currentStreak)}
           isFocusMode={isFocusMode}
           onToggleFocusMode={() => setIsFocusMode(!isFocusMode)}
         />
@@ -472,6 +490,19 @@ export function App() {
         onDeleteNote={(id) =>
           setNotes((prev) => prev.filter((n) => n.id !== id))
         }
+      />
+
+      {/* Sleep Audio Modal */}
+      <SleepAudioModal
+        isOpen={isSleepAudioOpen}
+        onClose={() => setIsSleepAudioOpen(false)}
+      />
+
+      {/* Habit Streak Milestone Celebration & Voluntary Donation Modal */}
+      <MilestoneCelebrationModal
+        isOpen={celebrationMilestone !== null}
+        onClose={() => setCelebrationMilestone(null)}
+        milestoneDays={celebrationMilestone || streakData.currentStreak}
       />
     </div>
   );

@@ -1,6 +1,6 @@
-import React from 'react';
-import { X, Sparkles, BookOpen, Heart } from 'lucide-react';
+import { X, Sparkles, BookOpen, Heart, MessageCircle } from 'lucide-react';
 import type { BookMeta } from '../types';
+import { shareDevotionalOnWhatsApp } from '../utils/whatsapp';
 
 interface DailyDevotionalModalProps {
   isOpen: boolean;
@@ -71,6 +71,16 @@ export const DailyDevotionalModal: React.FC<DailyDevotionalModalProps> = ({
     (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
   );
   const devotional = DEVOTIONALS[dayOfYear % DEVOTIONALS.length];
+
+  const handleShareWhatsApp = () => {
+    shareDevotionalOnWhatsApp(
+      devotional.devotionalTitle,
+      devotional.reference,
+      devotional.text,
+      devotional.message,
+      devotional.prayer
+    );
+  };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -187,30 +197,54 @@ export const DailyDevotionalModal: React.FC<DailyDevotionalModalProps> = ({
             </p>
           </div>
 
-          {/* Bottom Action: Read whole chapter in Bible */}
-          <button
-            onClick={() => {
-              onReadInBible(devotional.bookAbbrev, devotional.chapter);
-              onClose();
-            }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              backgroundColor: 'var(--accent-gold)',
-              color: '#ffffff',
-              border: 'none',
-              padding: '12px 20px',
-              borderRadius: 'var(--radius-full)',
-              fontSize: '0.92rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
-            <BookOpen size={17} />
-            <span>Ler o Capítulo Completo no App</span>
-          </button>
+          {/* Action Buttons: Read Chapter + Share on WhatsApp */}
+          <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
+            <button
+              onClick={handleShareWhatsApp}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                backgroundColor: '#25D366',
+                color: '#ffffff',
+                border: 'none',
+                padding: '12px 20px',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '0.92rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(37, 211, 102, 0.3)',
+              }}
+            >
+              <MessageCircle size={18} />
+              <span>Compartilhar Devocional no WhatsApp</span>
+            </button>
+
+            <button
+              onClick={() => {
+                onReadInBible(devotional.bookAbbrev, devotional.chapter);
+                onClose();
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                backgroundColor: 'var(--bg-secondary)',
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-primary)',
+                padding: '12px 20px',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '0.92rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              <BookOpen size={17} color="var(--accent-gold)" />
+              <span>Ler o Capítulo Completo no App</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
