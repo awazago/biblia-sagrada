@@ -18,6 +18,7 @@ import { MilestoneCelebrationModal } from './components/MilestoneCelebrationModa
 import { BottomNav, type NavTabType } from './components/BottomNav';
 import { explainPassage } from './utils/explainer';
 import { loadStreakData, recordDailyReading, type StreakData } from './utils/streak';
+import { Analytics } from '@vercel/analytics/react';
 import { Minimize2 } from 'lucide-react';
 
 const STORAGE_KEY_SETTINGS = 'biblia_settings_v1';
@@ -504,6 +505,9 @@ export function App() {
         onClose={() => setCelebrationMilestone(null)}
         milestoneDays={celebrationMilestone || streakData.currentStreak}
       />
+
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   );
 }
