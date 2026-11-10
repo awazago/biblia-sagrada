@@ -233,10 +233,18 @@ export const SleepAudioModal: React.FC<SleepAudioModalProps> = ({ isOpen, onClos
         }
       };
 
-      utterance.onerror = () => {
+      utterance.onerror = (e: SpeechSynthesisErrorEvent) => {
+        // Browsers trigger 'interrupted' or 'canceled' when switching sentences or tracks.
+        // Never stop ambient sound or playback state on these benign events.
+        if (e.error === 'interrupted' || e.error === 'canceled') {
+          return;
+        }
+        console.warn('Speech synthesis notice:', e.error);
         if (!stopRequestedRef.current) {
-          setIsPlaying(false);
-          ambientSound.stop();
+          // Attempt next sentence after brief micro-pause
+          currentSentenceTimeoutRef.current = window.setTimeout(() => {
+            speakNextSentence();
+          }, 350);
         }
       };
 
