@@ -1,0 +1,32 @@
+{
+  "name": "Bíblia Sagrada — Estudo & Versículos",
+  "short_name": "Bíblia Sagrada",
+  "description": "Bíblia Sagrada Completa em Português com Explicação de Versículos, Salmos, Modo Offline e Recursos de Estudo para iPhone, Celular e Computador.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0c0f17",
+  "theme_color": "#0c0f17",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
