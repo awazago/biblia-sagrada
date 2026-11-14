@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Search, Settings, Sparkles, Smartphone, Heart, Calendar, Maximize2, Minimize2, Moon, Flame } from 'lucide-react';
+import { BookOpen, Search, Settings, Sparkles, Smartphone, Heart, Calendar, Maximize2, Minimize2, Moon, Flame, Image as ImageIcon } from 'lucide-react';
 import type { BookMeta } from '../types';
 
 interface HeaderProps {
@@ -15,6 +15,7 @@ interface HeaderProps {
   onOpenReadingPlans: () => void;
   onOpenSleepAudio: () => void;
   onOpenStreakInfo: () => void;
+  onOpenArtGallery: () => void;
   isFocusMode: boolean;
   onToggleFocusMode: () => void;
 }
@@ -32,6 +33,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenReadingPlans,
   onOpenSleepAudio,
   onOpenStreakInfo,
+  onOpenArtGallery,
   isFocusMode,
   onToggleFocusMode,
 }) => {
@@ -91,6 +93,16 @@ export const Header: React.FC<HeaderProps> = ({
           id="btn-reading-plans"
         >
           <Calendar size={19} color="var(--accent-gold)" />
+        </button>
+
+        {/* Illustrated Bible Art Gallery Button */}
+        <button
+          className="icon-button"
+          onClick={onOpenArtGallery}
+          title="Bíblia Ilustrada (Galeria de Arte Sacra)"
+          id="btn-art-gallery"
+        >
+          <ImageIcon size={19} color="var(--accent-gold)" />
         </button>
 
         {/* Sleep Audio Button */}

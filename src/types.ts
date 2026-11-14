@@ -82,4 +82,5 @@ export interface ReadingSettings {
   fontFamily: 'literata' | 'serif' | 'sans';
   lineSpacing: 'comfortable' | 'relaxed' | 'spacious';
   redLetter: boolean; // Jesus words highlighted
+  showIllustrations?: boolean; // Display sacred art illustrations
 }

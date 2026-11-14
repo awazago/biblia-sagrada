@@ -15,6 +15,7 @@ import { EmotionalPsalmsModal } from './components/EmotionalPsalmsModal';
 import { ReadingPlansModal } from './components/ReadingPlansModal';
 import { SleepAudioModal } from './components/SleepAudioModal';
 import { MilestoneCelebrationModal } from './components/MilestoneCelebrationModal';
+import { ArtGalleryModal } from './components/ArtGalleryModal';
 import { BottomNav, type NavTabType } from './components/BottomNav';
 import { explainPassage } from './utils/explainer';
 import { loadStreakData, recordDailyReading, type StreakData } from './utils/streak';
@@ -78,6 +79,7 @@ export function App() {
   const [isEmotionalPsalmsOpen, setIsEmotionalPsalmsOpen] = useState(false);
   const [isReadingPlansOpen, setIsReadingPlansOpen] = useState(false);
   const [isSleepAudioOpen, setIsSleepAudioOpen] = useState(false);
+  const [isArtGalleryOpen, setIsArtGalleryOpen] = useState(false);
   const [celebrationMilestone, setCelebrationMilestone] = useState<number | null>(null);
   const [streakData, setStreakData] = useState<StreakData>(() => loadStreakData());
 
@@ -329,6 +331,7 @@ export function App() {
           currentStreak={streakData.currentStreak}
           onOpenSleepAudio={() => setIsSleepAudioOpen(true)}
           onOpenStreakInfo={() => setCelebrationMilestone(streakData.currentStreak)}
+          onOpenArtGallery={() => setIsArtGalleryOpen(true)}
           isFocusMode={isFocusMode}
           onToggleFocusMode={() => setIsFocusMode(!isFocusMode)}
         />
@@ -504,6 +507,16 @@ export function App() {
         isOpen={celebrationMilestone !== null}
         onClose={() => setCelebrationMilestone(null)}
         milestoneDays={celebrationMilestone || streakData.currentStreak}
+      />
+
+      {/* Illustrated Bible Sacred Art Gallery Modal */}
+      <ArtGalleryModal
+        isOpen={isArtGalleryOpen}
+        onClose={() => setIsArtGalleryOpen(false)}
+        onNavigateToChapter={(bookAbbrev, chap) => {
+          const b = books.find((x) => x.abbrev === bookAbbrev);
+          if (b) handleSelectBookChapter(b, chap);
+        }}
       />
 
       {/* Vercel Web Analytics */}

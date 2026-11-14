@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import type { BookMeta, BookDetail, Highlight, ReadingSettings } from '../types';
 import { shareVerseOnWhatsApp } from '../utils/whatsapp';
+import { getIllustrationForChapter, type BibleIllustration } from '../data/illustrationsData';
 
 interface BibleReaderProps {
   book: BookMeta | null;
@@ -51,6 +52,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
   const [copiedNotification, setCopiedNotification] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
+  const [expandedIllustration, setExpandedIllustration] = useState<BibleIllustration | null>(null);
 
   // Clear selections when chapter changes
   React.useEffect(() => {
@@ -69,6 +71,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
 
   const chapterIndex = chapter - 1;
   const verses = bookDetail.chapters[chapterIndex] || [];
+  const illustration = book ? getIllustrationForChapter(book.abbrev, chapter) : undefined;
 
   const handleVerseClick = (verseNum: number) => {
     setSelectedVerseNumbers((prev) => {
@@ -195,6 +198,94 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
           {book.summary}
         </p>
       </div>
+
+      {/* Sacred Art Illustration (Bíblia Ilustrada) */}
+      {illustration && settings.showIllustrations !== false && (
+        <div
+          className="chapter-illustration-card"
+          onClick={() => setExpandedIllustration(illustration)}
+          style={{
+            margin: '0 auto 28px auto',
+            maxWidth: '720px',
+            borderRadius: 'var(--radius-lg)',
+            overflow: 'hidden',
+            border: '1px solid var(--border-color)',
+            boxShadow: 'var(--shadow-md)',
+            cursor: 'pointer',
+            backgroundColor: 'var(--bg-card)',
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+          }}
+          title="Clique para ver a ilustração em tela cheia com detalhes históricos"
+        >
+          <div style={{ position: 'relative', overflow: 'hidden' }}>
+            <img
+              src={illustration.imagePath}
+              alt={illustration.title}
+              style={{
+                width: '100%',
+                maxHeight: '400px',
+                objectFit: 'cover',
+                display: 'block',
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                background:
+                  'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)',
+                padding: '24px 18px 14px 18px',
+                color: '#ffffff',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontSize: '0.74rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.12em',
+                  color: 'var(--accent-gold)',
+                  fontWeight: 700,
+                  marginBottom: '3px',
+                }}
+              >
+                <span>🎨 Bíblia Ilustrada</span>
+                <span>•</span>
+                <span>{illustration.title}</span>
+              </div>
+              <div style={{ fontSize: '0.88rem', fontStyle: 'italic', opacity: 0.95 }}>
+                "{illustration.subtitle}"
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              padding: '10px 16px',
+              fontSize: '0.78rem',
+              color: 'var(--text-muted)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <span>{illustration.artistNote}</span>
+            <span
+              style={{
+                color: 'var(--accent-gold)',
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+                marginLeft: '12px',
+              }}
+            >
+              🔍 Ver ampliado
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Verses Flow */}
       <article
@@ -404,6 +495,99 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             <X size={15} />
           </button>
         </aside>
+      )}
+
+      {/* Lightbox Modal for Fullscreen Illustration */}
+      {expandedIllustration && (
+        <div
+          className="modal-overlay"
+          onClick={() => setExpandedIllustration(null)}
+          style={{ zIndex: 1100, backgroundColor: 'rgba(0,0,0,0.94)' }}
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '850px',
+              padding: 0,
+              overflow: 'hidden',
+              backgroundColor: '#09090b',
+            }}
+          >
+            <div style={{ position: 'relative' }}>
+              <img
+                src={expandedIllustration.imagePath}
+                alt={expandedIllustration.title}
+                style={{
+                  width: '100%',
+                  maxHeight: '68vh',
+                  objectFit: 'contain',
+                  display: 'block',
+                  margin: '0 auto',
+                }}
+              />
+              <button
+                className="icon-button"
+                onClick={() => setExpandedIllustration(null)}
+                style={{
+                  position: 'absolute',
+                  top: '12px',
+                  right: '12px',
+                  backgroundColor: 'rgba(0,0,0,0.65)',
+                  color: '#ffffff',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
+                }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div style={{ padding: '20px 24px', textAlign: 'left' }}>
+              <div
+                style={{
+                  color: 'var(--accent-gold)',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                }}
+              >
+                {expandedIllustration.bookName} {expandedIllustration.chapter} • Arte Sacra
+              </div>
+              <h2
+                style={{
+                  fontSize: '1.3rem',
+                  fontWeight: 700,
+                  color: '#ffffff',
+                  margin: '4px 0 8px 0',
+                }}
+              >
+                {expandedIllustration.title}
+              </h2>
+              <p
+                style={{
+                  fontStyle: 'italic',
+                  color: '#e4e4e7',
+                  fontSize: '0.94rem',
+                  margin: '0 0 10px 0',
+                }}
+              >
+                "{expandedIllustration.subtitle}"
+              </p>
+              <p
+                style={{
+                  color: '#a1a1aa',
+                  fontSize: '0.84rem',
+                  margin: 0,
+                  lineHeight: 1.6,
+                }}
+              >
+                {expandedIllustration.artistNote}
+              </p>
+            </div>
+          </div>
+        </div>
       )}
     </main>
   );

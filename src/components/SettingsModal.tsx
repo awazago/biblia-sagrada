@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Sliders, Heart, Calendar } from 'lucide-react';
+import { X, Sliders, Heart, Calendar, Image as ImageIcon } from 'lucide-react';
 import type { ReadingSettings, ThemeMode } from '../types';
 
 interface SettingsModalProps {
@@ -208,6 +208,48 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 );
               })}
             </div>
+          </div>
+
+          {/* Illustrated Bible Mode Toggle */}
+          <div
+            style={{
+              padding: '14px',
+              backgroundColor: 'var(--bg-secondary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: 'var(--radius-md)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+              >
+                <ImageIcon size={16} color="var(--accent-gold)" />
+                <span>Bíblia Ilustrada (Artes Sacras)</span>
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                Exibir pinturas clássicas em passagens e capítulos marcantes
+              </div>
+            </div>
+            <button
+              onClick={() =>
+                onUpdateSettings({
+                  showIllustrations: settings.showIllustrations === false ? true : false,
+                })
+              }
+              className={`filter-pill ${settings.showIllustrations !== false ? 'active' : ''}`}
+              style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+            >
+              {settings.showIllustrations !== false ? 'Ativado' : 'Desativado'}
+            </button>
           </div>
 
           {/* Reading Plans Banner in Settings */}
